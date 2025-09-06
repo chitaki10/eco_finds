@@ -1,34 +1,53 @@
-# backend/app/models/product.py
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, Date
-from sqlalchemy.orm import relationship
-from app.db.database import Base
+from fastapi import APIRouter, Depends, Query, HTTPException
+from sqlalchemy.orm import Session
+from typing import List, Optional
+from app.dependencies import get_db, get_current_user
+from app.models.user import User
+from app.models.product import Product
+from app.schemas.product import Product as ProductSchema, ProductCreate
 
-class Product(Base):
-    __tablename__ = "products"
+router = APIRouter()
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), index=True, nullable=False)
-    description = Column(String(1024))
-    price = Column(Float, nullable=False)
-    image_url = Column(String(255))
+# ... (get_products logic remains the same) ...
+
+@router.get("/products/{product_id}", response_model=ProductSchema)
+def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return product
+
+@router.post("/products", response_model=ProductSchema)
+def create_product(product: ProductCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    new_product = Product(**product.model_dump(), owner_id=current_user.id)
+    db.add(new_product)
+    db.commit()
+    db.refresh(new_product)
+    return new_product
+
+@router.put("/products/{product_id}", response_model=ProductSchema)
+def update_product(product_id: int, product_update: ProductCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    if product.owner_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to update this product")
     
-    # --- NEW FIELDS ---
-    quantity = Column(Integer, default=1)
-    condition = Column(String(50)) # e.g., "New", "Used - Like New"
-    year_of_manufacture = Column(Integer, nullable=True)
-    brand = Column(String(100), nullable=True)
-    model = Column(String(100), nullable=True)
-    dimensions = Column(String(100), nullable=True) # e.g., "10x5x2 cm"
-    weight = Column(Float, nullable=True) # in kg
-    material = Column(String(100), nullable=True)
-    color = Column(String(50), nullable=True)
-    original_packaging = Column(Boolean, default=False)
-    manual_included = Column(Boolean, default=False)
-    working_condition = Column(String(500))
+    for key, value in product_update.model_dump().items():
+        setattr(product, key, value)
+    
+    db.commit()
+    db.refresh(product)
+    return product
 
-    # --- RELATIONSHIPS ---
-    category_id = Column(Integer, ForeignKey("categories.id"))
-    category = relationship("Category", back_populates="products")
-
-    owner_id = Column(Integer, ForeignKey("users.id"))
-    owner = relationship("User", back_populates="products")
+@router.delete("/products/{product_id}", status_code=204)
+def delete_product(product_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    product = db.query(Product).filter(Product.id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    if product.owner_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this product")
+    
+    db.delete(product)
+    db.commit()
+    return {"ok": True}
