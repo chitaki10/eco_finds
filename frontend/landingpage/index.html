@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nature's Nest - Discover Nature's Best</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="Nature’s Nest.png" alt="Nature's Nest Logo">
+            </div>
+            <nav class="nav-links">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#shop">Shop</a></li>
+                    <li><a href="#categories">Categories</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for natural products...">
+            </div>
+            <div class="user-actions">
+                <i class="fas fa-user-circle"></i>
+                <i class="fas fa-shopping-cart"></i>
+                <button id="list-product-btn" class="list-button">List Your Product</button>
+            </div>
+        </div>
+    </header>
+    
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Discover Nature’s Best, Delivered to You</h1>
+            <p>Your one-stop shop for a healthier, more sustainable lifestyle.</p>
+            <button class="cta-button">Start Shopping</button>
+        </div>
+        <div class="hero-image-container">
+            <img src="hero-image.jpg" alt="Eco-friendly products">
+        </div>
+    </section>
+
+    <section class="categories-section" id="categories">
+        <h2>Quick Categories</h2>
+        <div class="category-grid">
+            <div class="category-card">
+                <i class="fas fa-leaf"></i>
+                <h3>Organic Foods</h3>
+                <button>Explore</button>
+            </div>
+            <div class="category-card">
+                <i class="fas fa-spa"></i>
+                <h3>Skincare</h3>
+                <button>Explore</button>
+            </div>
+            <div class="category-card">
+                <i class="fas fa-home"></i>
+                <h3>Eco-Home</h3>
+                <button>Explore</button>
+            </div>
+            <div class="category-card">
+                <i class="fas fa-seedling"></i>
+                <h3>Herbal Wellness</h3>
+                <button>Explore</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-showcase" id="shop">
+        <h2>Featured Products</h2>
+        <div class="product-grid">
+            </div>
+    </section>
+
+    <section class="features-section">
+        <div class="feature-item">
+            <i class="fas fa-leaf"></i>
+            <p>100% Natural Products</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-truck"></i>
+            <p>Eco-Friendly Delivery</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-lock"></i>
+            <p>Secure Checkout</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-headset"></i>
+            <p>24/7 Support</p>
+        </div>
+    </section>
+
+    <section class="testimonials-section">
+        <h2>What Our Customers Say</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <img src="avatar1.jpg" alt="Customer Avatar">
+                <div class="stars">★★★★★</div>
+                <p>"Nature's Nest has the best organic products! The quality is amazing and the delivery is always fast."</p>
+                <h4>- Jane Doe</h4>
+            </div>
+            <div class="testimonial-card">
+                <img src="avatar2.jpg" alt="Customer Avatar">
+                <div class="stars">★★★★★</div>
+                <p>"I love their eco-friendly home goods. It's great to support a company that cares about the planet."</p>
+                <h4>- John Smith</h4>
+            </div>
+            <div class="testimonial-card">
+                <img src="avatar3.jpg" alt="Customer Avatar">
+                <div class="stars">★★★★★</div>
+                <p>"The skincare products are gentle and effective. My skin has never looked better. Highly recommend!"</p>
+                <h4>- Emily White</h4>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="Nature’s Nest.png" alt="Nature's Nest Logo">
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Help Center</a></li>
+                </ul>
+            </div>
+            <div class="footer-newsletter">
+                <h4>Stay Updated</h4>
+                <div class="newsletter-box">
+                    <input type="email" placeholder="Enter your email...">
+                    <button>Subscribe</button>
+                </div>
+                <div class="social-icons">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-twitter"></i>
+                </div>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2025 Nature's Nest. All rights reserved.</p>
+    </footer>
+
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>List a New Product</h2>
+            <form id="product-form">
+                <label for="product-name">Product Name:</label>
+                <input type="text" id="product-name" required>
+                
+                <label for="product-price">Product Price ($):</label>
+                <input type="number" id="product-price" required>
+                
+                <label for="product-image">Product Image URL:</label>
+                <input type="text" id="product-image" required>
+                
+                <button type="submit">Add Product</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
