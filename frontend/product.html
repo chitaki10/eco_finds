@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Product</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Times New Roman', serif; background-color: #f0fdfa; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center">
+                <img src="log.jpg" alt="Logo" class="h-12 w-12 mr-3">
+                <h1 class="text-2xl font-bold text-[#0ABAB5]">Nature's Nest</h1>
+            </a>
+            <div>
+                <a href="index.html" class="text-gray-600 hover:text-[#0ABAB5]">Back to Browse</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Form Content -->
+    <main class="container mx-auto p-6">
+        <div class="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold text-center text-[#0ABAB5] mb-6">Add a New Product</h2>
+            
+            <div id="message-box" class="p-3 rounded-md text-center font-semibold text-white mb-4 hidden"></div>
+
+            <form id="add-product-form" class="space-y-4">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium">Product Title*</label>
+                        <input type="text" id="name" class="mt-1 p-2 w-full border rounded-md" required>
+                    </div>
+                    <div>
+                        <label for="category_id" class="block text-sm font-medium">Category*</label>
+                        <select id="category_id" class="mt-1 p-2 w-full border rounded-md" required>
+                            <option value="">Select a category</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="description" class="block text-sm font-medium">Description</label>
+                    <textarea id="description" rows="3" class="mt-1 p-2 w-full border rounded-md"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="price" class="block text-sm font-medium">Price ($)*</label>
+                        <input type="number" id="price" step="0.01" class="mt-1 p-2 w-full border rounded-md" required>
+                    </div>
+                     <div>
+                        <label for="condition" class="block text-sm font-medium">Condition*</label>
+                        <select id="condition" class="mt-1 p-2 w-full border rounded-md" required>
+                            <option value="">Select condition</option>
+                            <option value="New">New</option>
+                            <option value="Used - Like New">Used - Like New</option>
+                            <option value="Used - Good">Used - Good</option>
+                            <option value="Used - Fair">Used - Fair</option>
+                        </select>
+                    </div>
+                </div>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="brand" class="block text-sm font-medium">Brand</label>
+                        <input type="text" id="brand" class="mt-1 p-2 w-full border rounded-md">
+                    </div>
+                     <div>
+                        <label for="model" class="block text-sm font-medium">Model</label>
+                        <input type="text" id="model" class="mt-1 p-2 w-full border rounded-md">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="working_condition" class="block text-sm font-medium">Working Condition Description*</label>
+                    <textarea id="working_condition" rows="2" class="mt-1 p-2 w-full border rounded-md" required></textarea>
+                </div>
+
+                <div class="pt-6 text-center">
+                    <button type="submit" class="bg-[#0ABAB5] text-white font-bold py-3 px-8 rounded-full shadow-lg w-full hover:bg-[#56DFCF]">
+                        Add Item
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const API_BASE_URL = 'http://1227.0.0.1:8000/api';
+            const form = document.getElementById('add-product-form');
+            const messageBox = document.getElementById('message-box');
+            const categorySelect = document.getElementById('category_id');
+
+            // --- CHECK FOR LOGIN TOKEN ---
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                alert('You must be logged in to add a product.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // --- POPULATE CATEGORIES ---
+            async function fetchCategories() {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/categories`);
+                    const categories = await response.json();
+                    categories.forEach(cat => {
+                        const option = document.createElement('option');
+                        option.value = cat.id;
+                        option.textContent = cat.name;
+                        categorySelect.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Failed to load categories', error);
+                }
+            }
+            fetchCategories();
+
+            // --- HANDLE FORM SUBMISSION ---
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const requestBody = {
+                    name: document.getElementById('name').value,
+                    category_id: parseInt(document.getElementById('category_id').value),
+                    description: document.getElementById('description').value,
+                    price: parseFloat(document.getElementById('price').value),
+                    condition: document.getElementById('condition').value,
+                    brand: document.getElementById('brand').value,
+                    model: document.getElementById('model').value,
+                    working_condition: document.getElementById('working_condition').value
+                };
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/products`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}` // IMPORTANT: Send the token
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.detail[0].msg || data.detail || 'Failed to add product.');
+                    }
+
+                    messageBox.textContent = 'Product added successfully! Redirecting...';
+                    messageBox.className = 'p-3 rounded-md text-center font-semibold text-white mb-4 bg-green-500';
+                    setTimeout(() => window.location.href = 'index.html', 2000);
+
+                } catch (error) {
+                    messageBox.textContent = error.message;
+                    messageBox.className = 'p-3 rounded-md text-center font-semibold text-white mb-4 bg-red-500';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
