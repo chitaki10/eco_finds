@@ -1,0 +1,108 @@
+/* Background */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: #adeed9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container */
+.signup-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Signup/Login card */
+.signup-card {
+  background: #e8fff9;
+  padding: 50px 40px;
+  border-radius: 20px;
+  box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.15),
+              -6px -6px 18px rgba(255, 255, 255, 0.6);
+  text-align: center;
+  width: 500px;  /* wider */
+  max-width: 95%;
+  transition: transform 0.3s ease-in-out;
+}
+
+.signup-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Logo */
+.logo-image {
+  width: 90px;
+  height: auto;
+  margin: 0 auto 20px auto;
+  display: block;
+}
+
+/* Title */
+.project-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #007a66;
+  margin-bottom: 25px;
+}
+
+/* Inputs */
+.signup-card input {
+  display: block;
+  width: 100%;
+  margin: 14px 0;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #fff;
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1),
+              inset -3px -3px 6px rgba(255, 255, 255, 0.7);
+  font-size: 15px;
+  outline: none;
+}
+
+.signup-card input:focus {
+  border: 1px solid #00cba9;
+}
+
+/* Button */
+.signup-card button {
+  background: linear-gradient(145deg, #00cba9, #009f85);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 30px;
+  width: 100%;
+  font-size: 17px;
+  font-weight: 600;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2),
+              -2px -2px 8px rgba(255, 255, 255, 0.6);
+}
+
+.signup-card button:hover {
+  background: linear-gradient(145deg, #00e0b7, #00a98d);
+}
+
+/* Login text */
+.login-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #333;
+}
+
+.login-text a {
+  color: #007a66;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+}
