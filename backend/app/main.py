@@ -19,4 +19,4 @@ app.include_router(sample.router, prefix='/api/sample', tags=['Sample'])
 
 @app.get('/')
 def root():
-    return {'msg': 'Backend running successfully 🚀'}
+    return {'msg': 'Backend  is running  again 🚀'}
