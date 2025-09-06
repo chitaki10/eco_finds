@@ -1,0 +1,47 @@
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // If user is already logged in, send them to their profile
+            if (localStorage.getItem('authToken')) {
+                window.location.href = 'profile.html';
+            }
+
+            const form = document.getElementById('login-form');
+            const messageBox = document.getElementById('message-box');
+
+            function showMessage(msg, type) {
+                messageBox.textContent = msg;
+                messageBox.classList.remove('hidden');
+                messageBox.className = messageBox.className.replace(/bg-(red|green)-500/, '');
+                messageBox.classList.add(type === 'success' ? 'bg-green-500' : 'bg-red-500');
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const requestBody = { email, password };
+
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(requestBody)
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.detail || 'Login failed.');
+                    
+                    localStorage.setItem('authToken', data.access_token);
+                    showMessage('Login successful! Redirecting...', 'success');
+                    
+                    // --- KEY CHANGE: REDIRECT TO PROFILE PAGE ---
+                    setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
+
+                } catch (error) {
+                    showMessage(error.message, 'error');
+                }
+            });
+            
+            // Background animation code is unchanged
+            const canvas = document.getElementById('bg-canvas'); const ctx = canvas.getContext('2d'); let particles = []; const numParticles = 75; const linkDistance = 150; const particleColor = '#56DFCF'; const lineColor = '#0ABAB5'; function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; } function createParticles() { particles = []; for (let i = 0; i < numParticles; i++) { particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5, radius: Math.random() * 2 + 1, }); } } function draw() { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.fillStyle = particleColor; ctx.strokeStyle = lineColor; particles.forEach(p1 => { p1.x += p1.vx; p1.y += p1.vy; if (p1.x < 0 || p1.x > canvas.width) p1.vx *= -1; if (p1.y < 0 || p1.y > canvas.height) p1.vy *= -1; ctx.beginPath(); ctx.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2); ctx.fill(); particles.forEach(p2 => { const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y); if (dist < linkDistance) { const opacity = 1 - dist / linkDistance; ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.globalAlpha = opacity; ctx.stroke(); } }); }); ctx.globalAlpha = 1; requestAnimationFrame(draw); } window.addEventListener('resize', resizeCanvas); resizeCanvas(); createParticles(); draw();
+        });
+    </script>
